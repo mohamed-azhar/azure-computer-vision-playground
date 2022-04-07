@@ -4,6 +4,7 @@ using MicrosoftAzureComputerVisionPlayground.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//DI setup with the required services
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
@@ -25,6 +26,7 @@ builder.Services.AddScoped<IComputerVisionService, ComputerVisionService>();
 
 var app = builder.Build();
 
+//middleware pipeline setup
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -6,6 +6,10 @@ using Serilog;
 
 namespace MicrosoftAzureComputerVisionPlayground.Services
 {
+    /// <summary>
+    /// Azure computer vision interaction service.
+    /// Defines helper methods which acts as a wrapper against the computer vision API
+    /// </summary>
     public class ComputerVisionService : IComputerVisionService
     {
         private readonly ComputerVisionClient _client;
@@ -14,10 +18,16 @@ namespace MicrosoftAzureComputerVisionPlayground.Services
         public ComputerVisionService(IOptions<ComputerVision> options)
         {
             _computerVisionConfiguration = options.Value;
-            _client = Authenticate(_computerVisionConfiguration.Endpoint, _computerVisionConfiguration.Key);
+            _client = BuildVisionClient(_computerVisionConfiguration.Endpoint, _computerVisionConfiguration.Key);
         }
 
-        public static ComputerVisionClient Authenticate(string endpoint, string key)
+        /// <summary>
+        /// Build vision API client which will be used to interact with the API
+        /// </summary>
+        /// <param name="endpoint">Endpoint url which points to your computer vision resource created within Azure portal</param>
+        /// <param name="key">API key used for authentication</param>
+        /// <returns>ComputerVisionClient which is used for all the interactions</returns>
+        private ComputerVisionClient BuildVisionClient(string endpoint, string key)
         {
             return new ComputerVisionClient(new ApiKeyServiceClientCredentials(key))
             {
@@ -25,6 +35,11 @@ namespace MicrosoftAzureComputerVisionPlayground.Services
             };
         }
 
+        /// <summary>
+        /// With a given URL of an image, reads the text contents within it.
+        /// </summary>
+        /// <param name="url">Image url which is stored somewhere within the internet</param>
+        /// <returns>A string array containing text within the image</returns>
         public async Task<string[]> ReadAsync(string url)
         {
             Log.Information("Starting to read from url: {0}", url);

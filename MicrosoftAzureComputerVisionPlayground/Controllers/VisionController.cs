@@ -19,6 +19,11 @@ namespace MicrosoftAzureComputerVisionPlayground.Controllers
         {
             ArgumentNullException.ThrowIfNull(url, nameof(url));
 
+            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            {
+                return BadRequest("Invalid Url");
+            }
+
             var result = await _computerVisionService.ReadAsync(url);
 
             return Ok(result);
